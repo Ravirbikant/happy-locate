@@ -14,6 +14,7 @@ import {
   ListItemText,
   Tabs,
   Tab,
+  TextField,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
 import {
@@ -34,6 +35,15 @@ const AddInventoryPage = () => {
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const [activeTab, setActiveTab] = useState(0); // 0 for Room Wise, 1 for Category Wise
+  const [activeCategoryTab, setActiveCategoryTab] = useState(0); // 0 for All, 1 for Electrical, 2 for Furniture, 3 for Small Appliance
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const categories = [
+    "All",
+    "Electrical Appliance",
+    "Furniture",
+    "Small Appliance",
+  ];
 
   const handleUpdateInventoryRoom = (room, item, delta) => {
     const currentCount = inventoryByRoom[room]?.[item] || 0;
@@ -78,6 +88,23 @@ const AddInventoryPage = () => {
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
+
+  const handleCategoryTabChange = (event, newValue) => {
+    setActiveCategoryTab(newValue);
+  };
+
+  // Filter items based on the selected category and search query
+  const filteredItems = items.filter((item) => {
+    const matchesSearch = item.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    if (activeCategoryTab === 0) return matchesSearch; // All items
+    if (activeCategoryTab === 1)
+      return item.category === "Electrical Appliance" && matchesSearch;
+    if (activeCategoryTab === 2)
+      return item.category === "Furniture" && matchesSearch;
+    return item.category === "Small Appliance" && matchesSearch;
+  });
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
@@ -130,25 +157,49 @@ const AddInventoryPage = () => {
 
       {activeTab === 1 && (
         // Category Wise View
-        <Box display="flex" flexWrap="wrap" gap={2}>
-          {items?.map((item) => (
-            <Box key={item.id} sx={{ width: 150 }}>
-              <Typography>{item.name}</Typography>
-              <Box display="flex" alignItems="center" gap={1}>
-                <IconButton
-                  onClick={() => handleUpdateInventoryCategory(item.name, -1)}
-                >
-                  <Remove />
-                </IconButton>
-                <Typography>{calculateTotalItemCount(item.name)}</Typography>
-                <IconButton
-                  onClick={() => handleUpdateInventoryCategory(item.name, 1)}
-                >
-                  <Add />
-                </IconButton>
+        <Box>
+          {/* Search Bar */}
+          <Box mb={2}>
+            <TextField
+              label="Search Items"
+              variant="outlined"
+              fullWidth
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </Box>
+
+          {/* Sub-tabs for Categories */}
+          <Tabs
+            value={activeCategoryTab}
+            onChange={handleCategoryTabChange}
+            centered
+          >
+            {categories.map((category, index) => (
+              <Tab key={index} label={category} />
+            ))}
+          </Tabs>
+
+          <Box display="flex" flexWrap="wrap" gap={2}>
+            {filteredItems?.map((item) => (
+              <Box key={item.id} sx={{ width: 150 }}>
+                <Typography>{item.name}</Typography>
+                <Box display="flex" alignItems="center" gap={1}>
+                  <IconButton
+                    onClick={() => handleUpdateInventoryCategory(item.name, -1)}
+                  >
+                    <Remove />
+                  </IconButton>
+                  <Typography>{calculateTotalItemCount(item.name)}</Typography>
+                  <IconButton
+                    onClick={() => handleUpdateInventoryCategory(item.name, 1)}
+                  >
+                    <Add />
+                  </IconButton>
+                </Box>
               </Box>
-            </Box>
-          ))}
+            ))}
+          </Box>
         </Box>
       )}
 
