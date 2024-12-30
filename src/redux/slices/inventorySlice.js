@@ -21,11 +21,8 @@ const inventorySlice = createSlice({
       state.inventoryByRoom[room][item] = quantity;
     },
     updateCategoryInventory: (state, action) => {
-      const { category, item, quantity } = action.payload;
-      if (!state.inventoryByCategory[category]) {
-        state.inventoryByCategory[category] = {};
-      }
-      state.inventoryByCategory[category][item] = quantity;
+      const { item, quantity } = action.payload;
+      state.inventoryByCategory[item] = quantity;
     },
   },
 });

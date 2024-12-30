@@ -12,9 +12,14 @@ import {
   List,
   ListItem,
   ListItemText,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
-import { updateInventory } from "../redux/slices/inventorySlice";
+import {
+  updateInventory,
+  updateCategoryInventory,
+} from "../redux/slices/inventorySlice";
 import data from "../data/inventory.json";
 
 const AddInventoryPage = () => {
@@ -23,15 +28,30 @@ const AddInventoryPage = () => {
   const inventoryByRoom = useSelector(
     (state) => state.inventory.inventoryByRoom
   );
+  const inventoryByCategory = useSelector(
+    (state) => state.inventory.inventoryByCategory
+  );
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
+  const [activeTab, setActiveTab] = useState(0); // 0 for Room Wise, 1 for Category Wise
 
-  const handleUpdateInventory = (room, item, delta) => {
+  const handleUpdateInventoryRoom = (room, item, delta) => {
     const currentCount = inventoryByRoom[room]?.[item] || 0;
     const newCount = Math.max(currentCount + delta, 0);
     dispatch(
       updateInventory({
         room,
+        item,
+        quantity: newCount,
+      })
+    );
+  };
+
+  const handleUpdateInventoryCategory = (item, delta) => {
+    const currentCount = inventoryByCategory[item] || 0;
+    const newCount = Math.max(currentCount + delta, 0);
+    dispatch(
+      updateCategoryInventory({
         item,
         quantity: newCount,
       })
@@ -46,47 +66,91 @@ const AddInventoryPage = () => {
     setOpenModal(false);
   };
 
-  // Function to calculate the total count for each item across all rooms
   const calculateTotalItemCount = (itemName) => {
-    return selectedRooms.reduce((total, room) => {
+    const roomCount = selectedRooms.reduce((total, room) => {
       const count = inventoryByRoom[room]?.[itemName] || 0;
       return total + count;
     }, 0);
+    const categoryCount = inventoryByCategory[itemName] || 0;
+    return roomCount + categoryCount;
+  };
+
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
   };
 
   return (
     <Box display="flex" flexDirection="column" gap={2}>
-      {selectedRooms?.map((room, index) => (
-        <Accordion key={index}>
-          <AccordionSummary>
-            <Typography variant="h6">{room}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box display="flex" flexWrap="wrap" gap={2}>
-              {items?.map((item) => (
-                <Box key={item.id} sx={{ width: 150 }}>
-                  <Typography>{item.name}</Typography>
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <IconButton
-                      onClick={() => handleUpdateInventory(room, item.name, -1)}
-                    >
-                      <Remove />
-                    </IconButton>
-                    <Typography>
-                      {inventoryByRoom[room]?.[item.name] || 0}
-                    </Typography>
-                    <IconButton
-                      onClick={() => handleUpdateInventory(room, item.name, 1)}
-                    >
-                      <Add />
-                    </IconButton>
-                  </Box>
+      {/* Tabs for Room Wise and Category Wise */}
+      <Tabs value={activeTab} onChange={handleTabChange} centered>
+        <Tab label="Room Wise" />
+        <Tab label="Category Wise" />
+      </Tabs>
+
+      {activeTab === 0 && (
+        // Room Wise View
+        <Box>
+          {selectedRooms?.map((room, index) => (
+            <Accordion key={index}>
+              <AccordionSummary>
+                <Typography variant="h6">{room}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box display="flex" flexWrap="wrap" gap={2}>
+                  {items?.map((item) => (
+                    <Box key={item.id} sx={{ width: 150 }}>
+                      <Typography>{item.name}</Typography>
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <IconButton
+                          onClick={() =>
+                            handleUpdateInventoryRoom(room, item.name, -1)
+                          }
+                        >
+                          <Remove />
+                        </IconButton>
+                        <Typography>
+                          {inventoryByRoom[room]?.[item.name] || 0}
+                        </Typography>
+                        <IconButton
+                          onClick={() =>
+                            handleUpdateInventoryRoom(room, item.name, 1)
+                          }
+                        >
+                          <Add />
+                        </IconButton>
+                      </Box>
+                    </Box>
+                  ))}
                 </Box>
-              ))}
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </Box>
+      )}
+
+      {activeTab === 1 && (
+        // Category Wise View
+        <Box display="flex" flexWrap="wrap" gap={2}>
+          {items?.map((item) => (
+            <Box key={item.id} sx={{ width: 150 }}>
+              <Typography>{item.name}</Typography>
+              <Box display="flex" alignItems="center" gap={1}>
+                <IconButton
+                  onClick={() => handleUpdateInventoryCategory(item.name, -1)}
+                >
+                  <Remove />
+                </IconButton>
+                <Typography>{calculateTotalItemCount(item.name)}</Typography>
+                <IconButton
+                  onClick={() => handleUpdateInventoryCategory(item.name, 1)}
+                >
+                  <Add />
+                </IconButton>
+              </Box>
             </Box>
-          </AccordionDetails>
-        </Accordion>
-      ))}
+          ))}
+        </Box>
+      )}
 
       <Box>
         <Button

@@ -1,9 +1,14 @@
 {
   "items": [
-    { "id": 1, "name": "Washing Machine" },
-    { "id": 2, "name": "Sofa Chair" },
-    { "id": 3, "name": "Refrigerator" },
-    { "id": 4, "name": "Bed" },
-    { "id": 5, "name": "Smart TV" }
+    { "id": 1, "name": "Washing Machine", "category": "Electrical Appliance" },
+    { "id": 2, "name": "Refrigerator", "category": "Electrical Appliance" },
+    { "id": 3, "name": "Smart TV", "category": "Electrical Appliance" },
+    { "id": 4, "name": "Air Conditioner", "category": "Electrical Appliance" },
+    { "id": 5, "name": "Sofa Chair", "category": "Furniture" },
+    { "id": 6, "name": "Bed", "category": "Furniture" },
+    { "id": 7, "name": "Dining Table", "category": "Furniture" },
+    { "id": 8, "name": "Microwave Oven", "category": "Small Appliance" },
+    { "id": 9, "name": "Toaster", "category": "Small Appliance" },
+    { "id": 10, "name": "Blender", "category": "Small Appliance" }
   ]
 }
