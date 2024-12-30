@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   Button,
   Box,
-  Card,
-  CardContent,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Typography,
   IconButton,
   Modal,
@@ -17,7 +18,7 @@ import { updateInventory } from "../redux/slices/inventorySlice";
 import data from "../data/inventory.json";
 
 const AddInventoryPage = () => {
-  const { rooms } = data;
+  const { items } = data;
   const selectedRooms = useSelector((state) => state.inventory.selectedRooms);
   const inventoryByRoom = useSelector(
     (state) => state.inventory.inventoryByRoom
@@ -45,15 +46,25 @@ const AddInventoryPage = () => {
     setOpenModal(false);
   };
 
+  // Function to calculate the total count for each item across all rooms
+  const calculateTotalItemCount = (itemName) => {
+    return selectedRooms.reduce((total, room) => {
+      const count = inventoryByRoom[room]?.[itemName] || 0;
+      return total + count;
+    }, 0);
+  };
+
   return (
     <Box display="flex" flexDirection="column" gap={2}>
       {selectedRooms?.map((room, index) => (
-        <Box key={index}>
-          <Typography variant="h6">{room}</Typography>
-          <Box display="flex" flexWrap="wrap" gap={2}>
-            {rooms.map((item) => (
-              <Card key={item.id} sx={{ width: 150 }}>
-                <CardContent>
+        <Accordion key={index}>
+          <AccordionSummary>
+            <Typography variant="h6">{room}</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Box display="flex" flexWrap="wrap" gap={2}>
+              {items?.map((item) => (
+                <Box key={item.id} sx={{ width: 150 }}>
                   <Typography>{item.name}</Typography>
                   <Box display="flex" alignItems="center" gap={1}>
                     <IconButton
@@ -70,12 +81,13 @@ const AddInventoryPage = () => {
                       <Add />
                     </IconButton>
                   </Box>
-                </CardContent>
-              </Card>
-            ))}
-          </Box>
-        </Box>
+                </Box>
+              ))}
+            </Box>
+          </AccordionDetails>
+        </Accordion>
       ))}
+
       <Box>
         <Button
           variant="contained"
@@ -96,16 +108,16 @@ const AddInventoryPage = () => {
         >
           <Typography variant="h6">Selected Inventory</Typography>
           <List>
-            {Object.entries(inventoryByRoom).map(([room, items]) =>
-              Object.entries(items).map(
-                ([item, count]) =>
-                  count > 0 && (
-                    <ListItem key={`${room}-${item}`}>
-                      <ListItemText primary={`${room} - ${item}: ${count}`} />
-                    </ListItem>
-                  )
-              )
-            )}
+            {items?.map((item) => {
+              const totalItemCount = calculateTotalItemCount(item.name);
+              return (
+                totalItemCount > 0 && (
+                  <ListItem key={item.id}>
+                    <ListItemText primary={`${item.name}: ${totalItemCount}`} />
+                  </ListItem>
+                )
+              );
+            })}
           </List>
           <Button
             variant="contained"

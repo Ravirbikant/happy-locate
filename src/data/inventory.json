@@ -1,5 +1,5 @@
 {
-  "rooms": [
+  "items": [
     { "id": 1, "name": "Washing Machine" },
     { "id": 2, "name": "Sofa Chair" },
     { "id": 3, "name": "Refrigerator" },
