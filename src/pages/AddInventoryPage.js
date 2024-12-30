@@ -87,6 +87,10 @@ const AddInventoryPage = () => {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
+    // Reset category tab to "All" when switching to Room Wise or Category Wise
+    if (newValue === 1) {
+      setActiveCategoryTab(0); // All tab selected by default when switching to Category Wise
+    }
   };
 
   const handleCategoryTabChange = (event, newValue) => {
@@ -123,31 +127,53 @@ const AddInventoryPage = () => {
                 <Typography variant="h6">{room}</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Box display="flex" flexWrap="wrap" gap={2}>
-                  {items?.map((item) => (
-                    <Box key={item.id} sx={{ width: 150 }}>
-                      <Typography>{item.name}</Typography>
-                      <Box display="flex" alignItems="center" gap={1}>
-                        <IconButton
-                          onClick={() =>
-                            handleUpdateInventoryRoom(room, item.name, -1)
-                          }
-                        >
-                          <Remove />
-                        </IconButton>
-                        <Typography>
-                          {inventoryByRoom[room]?.[item.name] || 0}
-                        </Typography>
-                        <IconButton
-                          onClick={() =>
-                            handleUpdateInventoryRoom(room, item.name, 1)
-                          }
-                        >
-                          <Add />
-                        </IconButton>
+                <Box display="flex" flexDirection="column" gap={2}>
+                  {/* Search Bar for Room Wise */}
+                  <TextField
+                    label="Search Items"
+                    variant="outlined"
+                    fullWidth
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+
+                  {/* Category Tabs inside Room Wise Accordion */}
+                  <Tabs
+                    value={activeCategoryTab}
+                    onChange={handleCategoryTabChange}
+                    centered
+                  >
+                    {categories.map((category, index) => (
+                      <Tab key={index} label={category} />
+                    ))}
+                  </Tabs>
+
+                  <Box display="flex" flexWrap="wrap" gap={2}>
+                    {filteredItems?.map((item) => (
+                      <Box key={item.id} sx={{ width: 150 }}>
+                        <Typography>{item.name}</Typography>
+                        <Box display="flex" alignItems="center" gap={1}>
+                          <IconButton
+                            onClick={() =>
+                              handleUpdateInventoryRoom(room, item.name, -1)
+                            }
+                          >
+                            <Remove />
+                          </IconButton>
+                          <Typography>
+                            {inventoryByRoom[room]?.[item.name] || 0}
+                          </Typography>
+                          <IconButton
+                            onClick={() =>
+                              handleUpdateInventoryRoom(room, item.name, 1)
+                            }
+                          >
+                            <Add />
+                          </IconButton>
+                        </Box>
                       </Box>
-                    </Box>
-                  ))}
+                    ))}
+                  </Box>
                 </Box>
               </AccordionDetails>
             </Accordion>
