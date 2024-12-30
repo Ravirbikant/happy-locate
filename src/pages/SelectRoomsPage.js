@@ -6,6 +6,8 @@ import { addRoom } from "../redux/slices/inventorySlice";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+
 const SelectRoomsPage = () => {
   const [items, setItems] = useState({
     rooms: 0,
@@ -13,6 +15,8 @@ const SelectRoomsPage = () => {
     diningHall: 0,
     drawingHall: 0,
   });
+
+  const [activeTab, setActiveTab] = useState("Room Wise");
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -44,49 +48,142 @@ const SelectRoomsPage = () => {
   const isButtonDisabled = Object.values(items).every((value) => value === 0);
 
   return (
-    <Box
-      className="mt-12"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      gap={2}
-    >
-      {Object.keys(items).map((item) => (
-        <Box
-          key={item}
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          width="100%"
-          maxWidth={400}
-        >
-          <Typography>
-            {item.charAt(0).toUpperCase() + item.slice(1)} -
+    <Box className="flex justify-center h-screen items-center bg-gray-400">
+      <Box
+        className="h-full relative max-w-md shadow-md rounded-md bg-white"
+        style={{ minWidth: "320px" }}
+      >
+        <Box className="flex items-center w-full mt-4 px-4">
+          <IconButton onClick={() => {}}>
+            <KeyboardArrowLeftIcon style={{ color: "#222221" }} />
+          </IconButton>
+
+          <Typography
+            className="absolute left-1/2 transform -translate-x-1/2 font-bold"
+            style={{
+              fontFamily: "Helvetica",
+              fontWeight: 700,
+              fontSize: "16px",
+              lineHeight: "18.4px",
+            }}
+          >
+            Select Inventory
           </Typography>
-          <Box display="flex" alignItems="center" gap={2}>
-            <IconButton
-              onClick={() => handleDecrement(item)}
-              disabled={items[item] === 0}
-            >
-              <RemoveIcon />
-            </IconButton>
-            <Typography>{items[item]}</Typography>
-            <IconButton onClick={() => handleIncrement(item)}>
-              <AddIcon />
-            </IconButton>
-          </Box>
         </Box>
-      ))}
-      <Box width="100%" maxWidth={400}>
-        <Button
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={handleAddItems}
-          disabled={isButtonDisabled}
-        >
-          Continue
-        </Button>
+
+        <Box className="w-full mt-2 h-1 bg-[#D9D9D9]">
+          <Box className="h-1 bg-[#2B80FF]" style={{ width: "50%" }}></Box>
+        </Box>
+
+        <Box className="flex justify-between mx-4 my-4 items-center">
+          <Button
+            className="flex-1 mx-1 rounded-[10px] h-[35px]"
+            variant="contained"
+            style={{
+              backgroundColor: "#2B80FF",
+              fontFamily: "Helvetica",
+              fontSize: "12px",
+              fontWeight: 700,
+            }}
+          >
+            Room Wise
+          </Button>
+          <Button
+            className="flex-1 mx-1 rounded-[10px] h-[35px]"
+            variant="outlined"
+            style={{
+              fontFamily: "Helvetica",
+              fontSize: "12px",
+              fontWeight: 400,
+            }}
+          >
+            Category Wise
+          </Button>
+        </Box>
+
+        {Object.keys(items).map((item) => (
+          <Box
+            key={item}
+            className="flex justify-between items-center py-2 mx-4"
+          >
+            <Typography
+              className="font-medium text-lg "
+              style={{
+                fontFamily: "Helvetica",
+                fontSize: "14px",
+                fontWeight: 400,
+                color: "#000",
+              }}
+            >
+              {item
+                .split(/(?=[A-Z])/)
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ")}
+            </Typography>
+
+            <Box className="flex items-center space-x-4 ">
+              <IconButton
+                onClick={() => handleDecrement(item)}
+                disabled={items[item] === 0}
+                className="bg-gray-100 border rounded-full"
+              >
+                <RemoveIcon
+                  sx={{
+                    color: "#2B80FF",
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    border: "2px solid #2B80FF",
+                  }}
+                />
+              </IconButton>
+
+              <Typography
+                className="text-lg font-medium"
+                style={{ color: "#2B80FF" }}
+              >
+                {items[item]}
+              </Typography>
+              <IconButton
+                onClick={() => handleIncrement(item)}
+                className="bg-gray-100 border rounded-full"
+              >
+                <AddIcon
+                  sx={{
+                    color: "#2B80FF",
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    border: "2px solid #2B80FF",
+                  }}
+                />
+              </IconButton>
+            </Box>
+          </Box>
+        ))}
+        <Box className="absolute bottom-4 left-4 right-4">
+          <Button
+            onClick={handleAddItems}
+            sx={{
+              backgroundColor: "#2B80FF",
+              borderRadius: "10px",
+              fontFamily: "Helvetica",
+              fontWeight: 700,
+              fontSize: "16px",
+              color: "white",
+              height: "44px",
+              textTransform: "none",
+              "&:disabled": {
+                backgroundColor: "#D1D5DB",
+                color: "#9CA3AF",
+              },
+            }}
+            className="w-full"
+            disabled={isButtonDisabled}
+          >
+            Continue
+          </Button>
+        </Box>
       </Box>
     </Box>
   );
