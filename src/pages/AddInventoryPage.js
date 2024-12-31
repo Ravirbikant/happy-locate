@@ -202,10 +202,7 @@ const AddInventoryPage = () => {
 
   return (
     <Box className="flex justify-center h-screen bg-gray-400">
-      <Box
-        className="h-full relative max-w-md shadow-md rounded-md bg-white"
-        style={{ minWidth: "320px" }}
-      >
+      <Box className="w-full md:w-2/3 lg:w-1/3 h-full relative shadow-md rounded-md bg-white">
         <Box display="flex" flexDirection="column" gap={2}>
           <Box className="flex items-center w-full mt-4 px-4">
             <IconButton onClick={() => {}}>
@@ -258,7 +255,6 @@ const AddInventoryPage = () => {
           </Box>
 
           {activeTab === 0 && (
-            // Room Wise View
             <Box>
               {selectedRooms?.map((room, index) => (
                 <Accordion key={index}>
@@ -267,7 +263,6 @@ const AddInventoryPage = () => {
                   </AccordionSummary>
                   <AccordionDetails>
                     <Box display="flex" flexDirection="column" gap={2}>
-                      {/* Search Bar for Room Wise */}
                       <TextField
                         label="Search Items"
                         fullWidth
@@ -275,7 +270,6 @@ const AddInventoryPage = () => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                       />
 
-                      {/* Category Tabs inside Room Wise Accordion */}
                       <Tabs
                         value={activeCategoryTab}
                         onChange={handleCategoryTabChange}
@@ -354,7 +348,11 @@ const AddInventoryPage = () => {
                 ))}
               </Box>
 
-              <Box display="flex" flexWrap="wrap" className="mx-2">
+              <Box
+                display="flex"
+                flexWrap="wrap"
+                className="mx-2 overflow-y-auto"
+              >
                 {filteredItems?.map((item) => (
                   <ItemCard key={item?.id} item={item} />
                 ))}
