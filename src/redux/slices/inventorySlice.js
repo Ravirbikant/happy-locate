@@ -19,12 +19,15 @@ const inventorySlice = createSlice({
         state.inventoryByRoom[room] = {};
       }
       state.inventoryByRoom[room][item] = quantity;
+
+      state.inventoryByCategory[item] = Object.values(
+        state.inventoryByRoom
+      ).reduce((sum, room) => sum + (room[item] || 0), 0);
     },
     updateCategoryInventory: (state, action) => {
       const { item, quantity } = action.payload;
-      console.log(item?.name, " ", quantity);
 
-      state.inventoryByCategory[item?.name] = quantity;
+      state.inventoryByCategory[item.name] = quantity;
     },
   },
 });

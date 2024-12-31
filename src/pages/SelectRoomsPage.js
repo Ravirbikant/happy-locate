@@ -16,8 +16,6 @@ const SelectRoomsPage = () => {
     drawingHall: 0,
   });
 
-  const [activeTab, setActiveTab] = useState("Room Wise");
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

@@ -10,11 +10,6 @@ import {
   IconButton,
   Modal,
   List,
-  ListItem,
-  ListItemText,
-  Tabs,
-  Tab,
-  TextField,
 } from "@mui/material";
 import { Add, Remove, WarningAmberRounded } from "@mui/icons-material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
@@ -31,7 +26,6 @@ import ExpandMore from "@mui/icons-material/ExpandMore";
 const AddInventoryPage = () => {
   const { items } = data;
   const selectedRooms = useSelector((state) => state.inventory.selectedRooms);
-  console.log(selectedRooms);
   const inventoryByRoom = useSelector(
     (state) => state.inventory.inventoryByRoom
   );
@@ -40,8 +34,8 @@ const AddInventoryPage = () => {
   );
   const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
-  const [activeTab, setActiveTab] = useState(0); // 0 for Room Wise, 1 for Category Wise
-  const [activeCategoryTab, setActiveCategoryTab] = useState(0); // 0 for All, 1 for Electrical, 2 for Furniture, 3 for Small Appliance
+  const [activeTab, setActiveTab] = useState(0);
+  const [activeCategoryTab, setActiveCategoryTab] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
 
   const categories = [
@@ -72,12 +66,7 @@ const AddInventoryPage = () => {
   };
 
   const calculateTotalItemCount = (itemName) => {
-    const roomCount = selectedRooms.reduce((total, room) => {
-      const count = inventoryByRoom[room]?.[itemName] || 0;
-      return total + count;
-    }, 0);
-    const categoryCount = inventoryByCategory[itemName] || 0;
-    return roomCount + categoryCount;
+    return inventoryByCategory[itemName] || 0;
   };
 
   const calculateTotalAllItems = () => {
@@ -171,7 +160,6 @@ const AddInventoryPage = () => {
 
     const handleUpdateInventoryCategory = (value) => {
       const newCount = Math.max(currentCount + value, 0);
-      console.log(currentCount, value, newCount);
 
       dispatch(
         updateCategoryInventory({
@@ -440,8 +428,8 @@ const AddInventoryPage = () => {
                   opacity: calculateTotalAllItems() === 0 ? 0.5 : 1, // Disabled style
                 }}
                 onClick={
-                  !calculateTotalAllItems() === 0 ? handleContinue : undefined
-                } // Disable action
+                  !calculateTotalAllItems() !== 0 ? handleContinue : undefined
+                }
               >
                 View {calculateTotalAllItems()} items
               </Typography>
