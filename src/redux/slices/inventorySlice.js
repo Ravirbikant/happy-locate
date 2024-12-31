@@ -22,7 +22,9 @@ const inventorySlice = createSlice({
     },
     updateCategoryInventory: (state, action) => {
       const { item, quantity } = action.payload;
-      state.inventoryByCategory[item] = quantity;
+      console.log(item?.name, " ", quantity);
+
+      state.inventoryByCategory[item?.name] = quantity;
     },
   },
 });

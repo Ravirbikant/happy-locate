@@ -61,17 +61,6 @@ const AddInventoryPage = () => {
     );
   };
 
-  const handleUpdateInventoryCategory = (item, delta) => {
-    const currentCount = inventoryByCategory[item] || 0;
-    const newCount = Math.max(currentCount + delta, 0);
-    dispatch(
-      updateCategoryInventory({
-        item,
-        quantity: newCount,
-      })
-    );
-  };
-
   const handleContinue = () => {
     setOpenModal(true);
   };
@@ -87,14 +76,6 @@ const AddInventoryPage = () => {
     }, 0);
     const categoryCount = inventoryByCategory[itemName] || 0;
     return roomCount + categoryCount;
-  };
-
-  const handleTabChange = (event, newValue) => {
-    setActiveTab(newValue);
-    // Reset category tab to "All" when switching to Room Wise or Category Wise
-    if (newValue === 1) {
-      setActiveCategoryTab(0); // All tab selected by default when switching to Category Wise
-    }
   };
 
   const handleCategoryTabChange = (event, newValue) => {
@@ -115,14 +96,18 @@ const AddInventoryPage = () => {
   });
 
   function ItemCard({ item }) {
-    const [quantity, setQuantity] = useState(0);
-
-    const handleAddClick = () => {
-      setQuantity(1);
-    };
+    const currentCount = calculateTotalItemCount(item?.name) || 0;
 
     const handleUpdateInventoryCategory = (value) => {
-      setQuantity(quantity + value);
+      const newCount = Math.max(currentCount + value, 0);
+      console.log(currentCount, value, newCount);
+
+      dispatch(
+        updateCategoryInventory({
+          item,
+          quantity: newCount,
+        })
+      );
     };
 
     const imageSrc = `/images/${item.image}`;
@@ -142,57 +127,42 @@ const AddInventoryPage = () => {
               {item.name}
             </Typography>
             <Box className="flex items-center">
-              {quantity === 0 ? (
-                <Typography
-                  onClick={handleAddClick}
-                  style={{
-                    color: "#2B80FF",
-                    fontSize: "12px",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    marginRight: "0.5rem",
-                  }}
+              <>
+                <IconButton
+                  className="bg-gray-100 border rounded-full"
+                  onClick={() => handleUpdateInventoryCategory(-1)}
                 >
-                  Add
+                  <Remove
+                    sx={{
+                      color: "#2B80FF",
+                      width: 20,
+                      height: 20,
+                      borderRadius: "50%",
+                      border: "1px solid #2B80FF",
+                    }}
+                  />
+                </IconButton>
+                <Typography
+                  className="font-medium"
+                  style={{ color: "#2B80FF" }}
+                >
+                  {currentCount}
                 </Typography>
-              ) : (
-                <>
-                  <IconButton
-                    className="bg-gray-100 border rounded-full"
-                    onClick={() => handleUpdateInventoryCategory(-1)}
-                  >
-                    <Remove
-                      sx={{
-                        color: "#2B80FF",
-                        width: 20,
-                        height: 20,
-                        borderRadius: "50%",
-                        border: "1px solid #2B80FF",
-                      }}
-                    />
-                  </IconButton>
-                  <Typography
-                    className="font-medium"
-                    style={{ color: "#2B80FF" }}
-                  >
-                    {quantity}
-                  </Typography>
-                  <IconButton
-                    className="bg-gray-100 border rounded-full"
-                    onClick={() => handleUpdateInventoryCategory(1)}
-                  >
-                    <Add
-                      sx={{
-                        color: "#2B80FF",
-                        width: 20,
-                        height: 20,
-                        borderRadius: "50%",
-                        border: "1px solid #2B80FF",
-                      }}
-                    />
-                  </IconButton>
-                </>
-              )}
+                <IconButton
+                  className="bg-gray-100 border rounded-full"
+                  onClick={() => handleUpdateInventoryCategory(1)}
+                >
+                  <Add
+                    sx={{
+                      color: "#2B80FF",
+                      width: 20,
+                      height: 20,
+                      borderRadius: "50%",
+                      border: "1px solid #2B80FF",
+                    }}
+                  />
+                </IconButton>
+              </>
             </Box>
           </Box>
         </Box>
@@ -202,8 +172,8 @@ const AddInventoryPage = () => {
 
   return (
     <Box className="flex justify-center h-screen bg-gray-400">
-      <Box className="w-full md:w-2/3 lg:w-1/3 h-full relative shadow-md rounded-md bg-white">
-        <Box display="flex" flexDirection="column" gap={2}>
+      <Box className="w-full md:w-2/3 lg:w-1/3 h-screen relative shadow-md rounded-md bg-white">
+        <Box display="flex" flexDirection="column" className="h-screen">
           <Box className="flex items-center w-full mt-4 px-4">
             <IconButton onClick={() => {}}>
               <KeyboardArrowLeftIcon style={{ color: "#222221" }} />
@@ -314,7 +284,7 @@ const AddInventoryPage = () => {
           )}
 
           {activeTab === 1 && (
-            <Box>
+            <Box className="overflow-y-auto flex-1 scrollbar-thin h-[70vw]">
               <Box mb={2} mx={2}>
                 <div className="relative w-full">
                   <input
@@ -332,7 +302,7 @@ const AddInventoryPage = () => {
                 </div>
               </Box>
 
-              <Box className="flex space-x-4 overflow-x-auto scrollbar-hide mx-4 mb-2">
+              <Box className="flex space-x-4 overflow-x-auto mx-4 mb-2">
                 {categories.map((category, index) => (
                   <div
                     key={index}
