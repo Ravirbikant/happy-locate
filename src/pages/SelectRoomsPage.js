@@ -133,7 +133,7 @@ const SelectRoomsPage = () => {
                     width: 20,
                     height: 20,
                     borderRadius: "50%",
-                    border: "2px solid #2B80FF",
+                    border: "1px solid #2B80FF",
                   }}
                 />
               </IconButton>
@@ -154,7 +154,7 @@ const SelectRoomsPage = () => {
                     width: 20,
                     height: 20,
                     borderRadius: "50%",
-                    border: "2px solid #2B80FF",
+                    border: "1px solid #2B80FF",
                   }}
                 />
               </IconButton>
