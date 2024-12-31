@@ -433,12 +433,15 @@ const AddInventoryPage = () => {
             <Box className="mr-4 flex items-center">
               <Typography
                 className="whitespace-nowrap mr-4"
-                onClick={handleContinue}
                 sx={{
                   fontSize: "14px",
                   color: "#2B80FF",
                   cursor: "pointer",
+                  opacity: calculateTotalAllItems() === 0 ? 0.5 : 1, // Disabled style
                 }}
+                onClick={
+                  !calculateTotalAllItems() === 0 ? handleContinue : undefined
+                } // Disable action
               >
                 View {calculateTotalAllItems()} items
               </Typography>
@@ -448,7 +451,14 @@ const AddInventoryPage = () => {
               color="primary"
               fullWidth
               onClick={handleContinue}
-              sx={{ borderRadius: "10px" }}
+              disabled={calculateTotalAllItems() === 0}
+              sx={{
+                borderRadius: "10px",
+                "&:disabled": {
+                  backgroundColor: "#D1D5DB",
+                  color: "#9CA3AF",
+                },
+              }}
             >
               Continue
             </Button>

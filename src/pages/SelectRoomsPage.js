@@ -50,7 +50,7 @@ const SelectRoomsPage = () => {
   return (
     <Box className="flex justify-center h-screen items-center bg-gray-400">
       <Box
-        className="h-full relative max-w-md shadow-md rounded-md bg-white"
+        className="w-full md:w-2/3 lg:w-1/3 h-screen relative max-w-md shadow-md rounded-md bg-white"
         style={{ minWidth: "320px" }}
       >
         <Box className="flex items-center w-full mt-4 px-4">
