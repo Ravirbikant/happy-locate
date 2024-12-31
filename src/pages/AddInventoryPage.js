@@ -82,6 +82,11 @@ const AddInventoryPage = () => {
     setActiveCategoryTab(newValue);
   };
 
+  const countItemsByCategory = (category) => {
+    if (category === "All") return items?.length;
+    return items.filter((item) => item.category === category).length;
+  };
+
   // Filter items based on the selected category and search query
   const filteredItems = items.filter((item) => {
     const matchesSearch = item.name
@@ -307,13 +312,13 @@ const AddInventoryPage = () => {
                   <div
                     key={index}
                     className={`cursor-pointer capitalize flex items-center justify-center${
-                      activeCategoryTab === index + 1
+                      activeCategoryTab === index
                         ? "!text-[#2B80FF] font-bold text-[14px]"
                         : "text-black font-normal text-[12px]"
                     }`}
-                    onClick={() => handleCategoryTabChange(null, index + 1)}
+                    onClick={() => handleCategoryTabChange(null, index)}
                   >
-                    {`${category} ${filteredItems?.length} `}
+                    {`${category} ${countItemsByCategory(category)} `}
                   </div>
                 ))}
               </Box>
