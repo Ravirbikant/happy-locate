@@ -16,7 +16,7 @@ import {
   Tab,
   TextField,
 } from "@mui/material";
-import { Add, Remove } from "@mui/icons-material";
+import { Add, Remove, WarningAmberRounded } from "@mui/icons-material";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import "../pages/addInventory.css";
 
@@ -262,7 +262,6 @@ const AddInventoryPage = () => {
               Add Inventory
             </Typography>
           </Box>
-
           <Box
             className="flex justify-between mx-4 my-4 items-center"
             sx={{
@@ -294,7 +293,6 @@ const AddInventoryPage = () => {
               Category Wise
             </Box>
           </Box>
-
           {activeTab === 0 && (
             <Box className="overflow-y-auto flex-1 ">
               {selectedRooms?.map((room, index) => (
@@ -370,7 +368,6 @@ const AddInventoryPage = () => {
               ))}
             </Box>
           )}
-
           {activeTab === 1 && (
             <Box className="overflow-y-auto flex-1 scrollbar-thin h-[70vw]">
               <Box mb={2} mx={2}>
@@ -417,7 +414,21 @@ const AddInventoryPage = () => {
               </Box>
             </Box>
           )}
-
+          <Box className="bg-[#059445] p-2 text-white flex rounded-tl-[12px] rounded-tr-[12px]">
+            <Box className="w-[20%]">
+              <WarningAmberRounded />
+            </Box>
+            <Typography
+              sx={{
+                fontSize: "15px",
+                fontWeight: "400",
+                lineHeight: "15.6px",
+              }}
+            >
+              Please ensure all inventory is added upfront. Any items added
+              later during pickup will incur extra charges.
+            </Typography>
+          </Box>
           <Box className="bg-white p-4 flex">
             <Box className="mr-4 flex items-center">
               <Typography
@@ -437,11 +448,11 @@ const AddInventoryPage = () => {
               color="primary"
               fullWidth
               onClick={handleContinue}
+              sx={{ borderRadius: "10px" }}
             >
               Continue
             </Button>
           </Box>
-
           <Modal open={openModal} onClose={handleCloseModal}>
             <Box
               position="absolute"
