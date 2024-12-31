@@ -22,9 +22,11 @@ import {
 import data from "../data/inventory.json";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { useNavigate } from "react-router-dom";
 
 const AddInventoryPage = () => {
   const { items } = data;
+  const navigate = useNavigate();
   const selectedRooms = useSelector((state) => state.inventory.selectedRooms);
   const inventoryByRoom = useSelector(
     (state) => state.inventory.inventoryByRoom
@@ -85,12 +87,11 @@ const AddInventoryPage = () => {
     return items.filter((item) => item.category === category).length;
   };
 
-  // Filter items based on the selected category and search query
   const filteredItems = items.filter((item) => {
     const matchesSearch = item.name
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
-    if (activeCategoryTab === 0) return matchesSearch; // All items
+    if (activeCategoryTab === 0) return matchesSearch;
     if (activeCategoryTab === 1)
       return item.category === "Electrical Appliance" && matchesSearch;
     if (activeCategoryTab === 2)
@@ -234,7 +235,11 @@ const AddInventoryPage = () => {
       <Box className="w-full md:w-2/3 lg:w-1/3 h-screen relative shadow-md rounded-md bg-white">
         <Box display="flex" flexDirection="column" className="h-screen">
           <Box className="flex items-center w-full mt-4 px-4">
-            <IconButton onClick={() => {}}>
+            <IconButton
+              onClick={() => {
+                navigate("/");
+              }}
+            >
               <KeyboardArrowLeftIcon style={{ color: "#222221" }} />
             </IconButton>
 
@@ -249,6 +254,9 @@ const AddInventoryPage = () => {
             >
               Add Inventory
             </Typography>
+          </Box>
+          <Box className="w-full mt-2 h-1 bg-[#D9D9D9]">
+            <Box className="h-1 bg-[#2B80FF]" style={{ width: "50%" }}></Box>
           </Box>
           <Box
             className="flex justify-between mx-4 my-4 items-center"

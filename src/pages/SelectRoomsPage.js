@@ -6,8 +6,6 @@ import { addRoom } from "../redux/slices/inventorySlice";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-
 const SelectRoomsPage = () => {
   const [items, setItems] = useState({
     rooms: 0,
@@ -20,7 +18,6 @@ const SelectRoomsPage = () => {
   const dispatch = useDispatch();
 
   const handleAddItems = () => {
-    // Dispatch each item based on the input values
     Object.entries(items).forEach(([key, value]) => {
       for (let i = 1; i <= value; i++) {
         dispatch(addRoom(`${key.charAt(0).toUpperCase() + key.slice(1)} ${i}`));
@@ -47,15 +44,8 @@ const SelectRoomsPage = () => {
 
   return (
     <Box className="flex justify-center h-screen items-center bg-gray-400">
-      <Box
-        className="w-full md:w-2/3 lg:w-1/3 h-screen relative max-w-md shadow-md rounded-md bg-white"
-        style={{ minWidth: "320px" }}
-      >
-        <Box className="flex items-center w-full mt-4 px-4">
-          <IconButton onClick={() => {}}>
-            <KeyboardArrowLeftIcon style={{ color: "#222221" }} />
-          </IconButton>
-
+      <Box className="w-full md:w-2/3 lg:w-1/3 h-screen relative shadow-md rounded-md bg-white">
+        <Box className="flex items-center w-full mt-4 px-4 py-5">
           <Typography
             className="absolute left-1/2 transform -translate-x-1/2 font-bold"
             style={{
@@ -65,38 +55,12 @@ const SelectRoomsPage = () => {
               lineHeight: "18.4px",
             }}
           >
-            Select Inventory
+            Select Rooms
           </Typography>
         </Box>
 
         <Box className="w-full mt-2 h-1 bg-[#D9D9D9]">
-          <Box className="h-1 bg-[#2B80FF]" style={{ width: "50%" }}></Box>
-        </Box>
-
-        <Box className="flex justify-between mx-4 my-4 items-center">
-          <Button
-            className="flex-1 mx-1 rounded-[10px] h-[35px]"
-            variant="contained"
-            style={{
-              backgroundColor: "#2B80FF",
-              fontFamily: "Helvetica",
-              fontSize: "12px",
-              fontWeight: 700,
-            }}
-          >
-            Room Wise
-          </Button>
-          <Button
-            className="flex-1 mx-1 rounded-[10px] h-[35px]"
-            variant="outlined"
-            style={{
-              fontFamily: "Helvetica",
-              fontSize: "12px",
-              fontWeight: 400,
-            }}
-          >
-            Category Wise
-          </Button>
+          <Box className="h-1 bg-[#2B80FF]" style={{ width: "0%" }}></Box>
         </Box>
 
         {Object.keys(items).map((item) => (
