@@ -26,6 +26,7 @@ import {
 } from "../redux/slices/inventorySlice";
 import data from "../data/inventory.json";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import washing from "../data/images/washing-machine.jpg";
 
 const AddInventoryPage = () => {
   const { items } = data;
@@ -113,6 +114,68 @@ const AddInventoryPage = () => {
       return item.category === "Furniture" && matchesSearch;
     return item.category === "Small Appliance" && matchesSearch;
   });
+
+  function ItemCard({ item }) {
+    return (
+      <Box className=" w-1/2 p-2">
+        <Box className="h-[147px] rounded-[4px] border border-gray-400 flex flex-col">
+          <Box className="flex-grow">
+            <img
+              src={washing}
+              alt="item"
+              className="w-full h-full object-cover rounded-tl-[4px] rounded-tr-[4px]"
+            />
+          </Box>
+          <Box className="flex ml-2 mb-2 h-[30px] items-center justify-between">
+            <Typography
+              style={{
+                fontWeight: 700,
+                fontSize: "12px",
+              }}
+            >
+              {item.name}
+            </Typography>
+            <Box className="flex items-center">
+              <IconButton
+                className="bg-gray-100 border rounded-full"
+                onClick={() => handleUpdateInventoryCategory(item.name, -1)}
+              >
+                <Remove
+                  sx={{
+                    color: "#2B80FF",
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    border: "1px solid #2B80FF",
+                  }}
+                />
+              </IconButton>
+              <Typography
+                className="text-lg font-medium"
+                style={{ color: "#2B80FF" }}
+              >
+                {calculateTotalItemCount(item.name)}
+              </Typography>
+              <IconButton
+                className="bg-gray-100 border rounded-full"
+                onClick={() => handleUpdateInventoryCategory(item.name, 1)}
+              >
+                <Add
+                  sx={{
+                    color: "#2B80FF",
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    border: "1px solid #2B80FF",
+                  }}
+                />
+              </IconButton>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    );
+  }
 
   return (
     <Box className="flex justify-center h-screen bg-gray-400">
@@ -252,41 +315,25 @@ const AddInventoryPage = () => {
                 </div>
               </Box>
 
-              {/* Sub-tabs for Categories */}
-              <Tabs
-                value={activeCategoryTab}
-                onChange={handleCategoryTabChange}
-                centered
-              >
+              <Box className="flex space-x-4 overflow-x-auto scrollbar-hide mx-4 mb-2">
                 {categories.map((category, index) => (
-                  <Tab key={index} label={category} />
+                  <div
+                    key={index}
+                    className={`cursor-pointer capitalize flex items-center justify-center${
+                      activeCategoryTab === index + 1
+                        ? "!text-[#2B80FF] font-bold text-[14px]"
+                        : "text-black font-normal text-[12px]"
+                    }`}
+                    onClick={() => handleCategoryTabChange(null, index + 1)}
+                  >
+                    {`${category} ${filteredItems?.length} `}
+                  </div>
                 ))}
-              </Tabs>
+              </Box>
 
-              <Box display="flex" flexWrap="wrap" gap={2}>
+              <Box display="flex" flexWrap="wrap" className="mx-2">
                 {filteredItems?.map((item) => (
-                  <Box key={item.id} sx={{ width: 150 }}>
-                    <Typography>{item.name}</Typography>
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <IconButton
-                        onClick={() =>
-                          handleUpdateInventoryCategory(item.name, -1)
-                        }
-                      >
-                        <Remove />
-                      </IconButton>
-                      <Typography>
-                        {calculateTotalItemCount(item.name)}
-                      </Typography>
-                      <IconButton
-                        onClick={() =>
-                          handleUpdateInventoryCategory(item.name, 1)
-                        }
-                      >
-                        <Add />
-                      </IconButton>
-                    </Box>
-                  </Box>
+                  <ItemCard key={item?.id} item={item} />
                 ))}
               </Box>
             </Box>
