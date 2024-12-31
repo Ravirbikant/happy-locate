@@ -19,22 +19,21 @@ body {
   font-weight: 700;
 }
 
-/* CSS class to reduce scrollbar width */
 .scrollbar-thin {
-  scrollbar-width: thin; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: thin;
+  -ms-overflow-style: none;
 }
 
 .scrollbar-thin::-webkit-scrollbar {
-  width: 2px; /* Chrome, Safari, Edge */
-  height: 2px; /* For horizontal scrollbars */
+  width: 2px;
+  height: 2px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: #a0aec0; /* Customize thumb color */
-  border-radius: 2px; /* Optional: Rounded edges */
+  background-color: #a0aec0;
+  border-radius: 2px;
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {
-  background-color: #edf2f7; /* Customize track color */
+  background-color: #edf2f7;
 }

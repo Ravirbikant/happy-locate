@@ -268,7 +268,7 @@ const AddInventoryPage = () => {
           >
             <Box
               className={`flex-1 mx-1 rounded-[10px] h-[35px] tab-buttons ${
-                activeTab === 0 ? "active-tab" : ""
+                activeTab === 0 && "active-tab"
               }`}
               onClick={() => {
                 setActiveTab(0);
@@ -279,7 +279,7 @@ const AddInventoryPage = () => {
             </Box>
             <Box
               className={`flex-1 mx-1 rounded-[10px] h-[35px] tab-buttons ${
-                activeTab === 1 ? "active-tab" : ""
+                activeTab === 1 && "active-tab"
               }`}
               onClick={() => {
                 setActiveTab(1);
@@ -291,77 +291,99 @@ const AddInventoryPage = () => {
           </Box>
           {activeTab === 0 && (
             <Box className="overflow-y-auto flex-1 ">
-              {selectedRooms?.map((room, index) => (
-                <Box key={index}>
-                  <Accordion>
-                    <AccordionSummary
-                      expandIcon={<ExpandMore />}
-                      sx={{
-                        background: "#F7F7F7",
-                        height: "44px",
-                      }}
-                    >
-                      <Typography
-                        sx={{
-                          fontWeight: "400",
-                          fontSize: "16px",
-                        }}
-                        variant="h6"
-                      >
-                        {room}
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Box display="flex" flexDirection="column" gap={2}>
-                        <Box mb={2}>
-                          <div className="relative w-full">
-                            <input
-                              type="text"
-                              placeholder="Search for items"
-                              value={searchQuery}
-                              onChange={(e) => setSearchQuery(e.target.value)}
-                              className="w-full px-2 pr-10 border rounded-[10px] h-[44px] placeholder-[#616161]"
-                            />
-
-                            <SearchOutlinedIcon
-                              className="absolute top-1/2 right-3 -translate-y-1/2"
-                              style={{ fontSize: 30, color: "black" }}
-                            />
-                          </div>
-                        </Box>
-
-                        <Box className="flex space-x-4 overflow-x-auto scrollbar-thin mx-2 mb-2">
-                          {categories.map((category, index) => (
-                            <div
-                              key={index}
-                              className={`cursor-pointer whitespace-nowrap capitalize flex items-center justify-center${
-                                activeCategoryTab === index
-                                  ? "!text-[#2B80FF] font-bold text-[14px]"
-                                  : "text-black font-normal text-[12px]"
-                              }`}
-                              onClick={() =>
-                                handleCategoryTabChange(null, index)
-                              }
-                            >
-                              {`${category} ${countItemsByCategory(category)} `}
-                            </div>
-                          ))}
-                        </Box>
-
-                        <Box
-                          display="flex"
-                          flexWrap="wrap"
-                          className="overflow-y-auto scrollbar-thin"
-                        >
-                          {filteredItems?.map((item) => (
-                            <RoomItemCard item={item} room={room} />
-                          ))}
-                        </Box>
-                      </Box>
-                    </AccordionDetails>
-                  </Accordion>
+              {selectedRooms?.length === 0 ? (
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  height="100vh"
+                  textAlign="center"
+                >
+                  <Typography
+                    sx={{
+                      fontWeight: "700",
+                      fontSize: "18px",
+                      color: "#616161",
+                    }}
+                  >
+                    No rooms available. Please add rooms first.
+                  </Typography>
                 </Box>
-              ))}
+              ) : (
+                selectedRooms?.map((room, index) => (
+                  <Box key={index}>
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMore />}
+                        sx={{
+                          background: "#F7F7F7",
+                          height: "44px",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontWeight: "400",
+                            fontSize: "16px",
+                          }}
+                          variant="h6"
+                        >
+                          {room}
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Box display="flex" flexDirection="column" gap={2}>
+                          <Box mb={2}>
+                            <div className="relative w-full">
+                              <input
+                                type="text"
+                                placeholder="Search for items"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full px-2 pr-10 border rounded-[10px] h-[44px] placeholder-[#616161]"
+                              />
+
+                              <SearchOutlinedIcon
+                                className="absolute top-1/2 right-3 -translate-y-1/2"
+                                style={{ fontSize: 30, color: "black" }}
+                              />
+                            </div>
+                          </Box>
+
+                          <Box className="flex space-x-4 overflow-x-auto scrollbar-thin mx-2 mb-2">
+                            {categories.map((category, index) => (
+                              <div
+                                key={index}
+                                className={`cursor-pointer whitespace-nowrap capitalize flex items-center justify-center${
+                                  activeCategoryTab === index
+                                    ? "!text-[#2B80FF] font-bold text-[14px]"
+                                    : "text-black font-normal text-[12px]"
+                                }`}
+                                onClick={() =>
+                                  handleCategoryTabChange(null, index)
+                                }
+                              >
+                                {`${category} ${countItemsByCategory(
+                                  category
+                                )} `}
+                              </div>
+                            ))}
+                          </Box>
+
+                          <Box
+                            display="flex"
+                            flexWrap="wrap"
+                            className="overflow-y-auto scrollbar-thin"
+                          >
+                            {filteredItems?.map((item) => (
+                              <RoomItemCard item={item} room={room} />
+                            ))}
+                          </Box>
+                        </Box>
+                      </AccordionDetails>
+                    </Accordion>
+                  </Box>
+                ))
+              )}
             </Box>
           )}
           {activeTab === 1 && (
@@ -433,7 +455,7 @@ const AddInventoryPage = () => {
                   fontSize: "14px",
                   color: "#2B80FF",
                   cursor: "pointer",
-                  opacity: calculateTotalAllItems() === 0 ? 0.5 : 1, // Disabled style
+                  opacity: calculateTotalAllItems() === 0 ? 0.5 : 1,
                 }}
                 onClick={
                   !calculateTotalAllItems() !== 0 ? handleContinue : undefined

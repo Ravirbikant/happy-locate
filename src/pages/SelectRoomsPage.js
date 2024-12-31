@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Box, IconButton, Typography } from "@mui/material";
 import { useDispatch } from "react-redux";
@@ -25,6 +25,10 @@ const SelectRoomsPage = () => {
     });
     navigate("/add-inventory");
   };
+
+  useEffect(() => {
+    dispatch({ type: "inventory/resetRooms" });
+  }, []);
 
   const handleIncrement = (item) => {
     setItems((prev) => ({

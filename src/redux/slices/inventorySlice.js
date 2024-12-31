@@ -13,6 +13,9 @@ const inventorySlice = createSlice({
     addRoom: (state, action) => {
       state.selectedRooms.push(action.payload);
     },
+    resetRooms: (state) => {
+      state.selectedRooms = [];
+    },
     updateInventory: (state, action) => {
       const { room, item, quantity } = action.payload;
       if (!state.inventoryByRoom[room]) {
@@ -32,6 +35,6 @@ const inventorySlice = createSlice({
   },
 });
 
-export const { addRoom, updateInventory, updateCategoryInventory } =
+export const { addRoom, updateInventory, updateCategoryInventory, resetRooms } =
   inventorySlice.actions;
 export default inventorySlice.reducer;
