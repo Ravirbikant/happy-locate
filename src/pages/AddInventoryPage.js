@@ -80,6 +80,13 @@ const AddInventoryPage = () => {
     return roomCount + categoryCount;
   };
 
+  const calculateTotalAllItems = () => {
+    return items.reduce(
+      (total, item) => total + calculateTotalItemCount(item.name),
+      0
+    );
+  };
+
   const handleCategoryTabChange = (event, newValue) => {
     setActiveCategoryTab(newValue);
   };
@@ -329,11 +336,11 @@ const AddInventoryPage = () => {
                           </div>
                         </Box>
 
-                        <Box className="flex space-x-4 overflow-x-auto mx-4 mb-2">
+                        <Box className="flex space-x-4 overflow-x-auto scrollbar-thin mx-2 mb-2">
                           {categories.map((category, index) => (
                             <div
                               key={index}
-                              className={`cursor-pointer capitalize flex items-center justify-center${
+                              className={`cursor-pointer whitespace-nowrap capitalize flex items-center justify-center${
                                 activeCategoryTab === index
                                   ? "!text-[#2B80FF] font-bold text-[14px]"
                                   : "text-black font-normal text-[12px]"
@@ -350,7 +357,7 @@ const AddInventoryPage = () => {
                         <Box
                           display="flex"
                           flexWrap="wrap"
-                          className="overflow-y-auto"
+                          className="overflow-y-auto scrollbar-thin"
                         >
                           {filteredItems?.map((item) => (
                             <RoomItemCard item={item} room={room} />
@@ -411,7 +418,20 @@ const AddInventoryPage = () => {
             </Box>
           )}
 
-          <Box>
+          <Box className="bg-white p-4 flex">
+            <Box className="mr-4 flex items-center">
+              <Typography
+                className="whitespace-nowrap mr-4"
+                onClick={handleContinue}
+                sx={{
+                  fontSize: "14px",
+                  color: "#2B80FF",
+                  cursor: "pointer",
+                }}
+              >
+                View {calculateTotalAllItems()} items
+              </Typography>
+            </Box>
             <Button
               variant="contained"
               color="primary"
@@ -426,31 +446,59 @@ const AddInventoryPage = () => {
             <Box
               position="absolute"
               bgcolor="background.paper"
-              p={4}
               borderRadius={2}
+              className="bottom-0 left-0 right-0 bg-white p-4 w-full md:w-1/3 w-full mx-auto"
             >
-              <Typography variant="h6">Selected Inventory</Typography>
+              <Box>
+                <Typography
+                  className="flex justify-center"
+                  sx={{
+                    fontWeight: "700",
+                    size: "16px",
+                  }}
+                >
+                  Added Items
+                </Typography>
+              </Box>
               <List>
                 {items?.map((item) => {
                   const totalItemCount = calculateTotalItemCount(item.name);
+                  const imageSrc = `/images/${item.image}`;
+
                   return (
                     totalItemCount > 0 && (
-                      <ListItem key={item.id}>
-                        <ListItemText
-                          primary={`${item.name}: ${totalItemCount}`}
-                        />
-                      </ListItem>
+                      <Box
+                        className="flex justify-between items-center my-2"
+                        key={item.id}
+                      >
+                        <Box className="flex items-center space-x-2">
+                          <img
+                            src={imageSrc}
+                            alt="item"
+                            className="w-8 h-8 rounded-full"
+                          />
+                          <Typography
+                            sx={{
+                              fontWeight: "400",
+                              size: "16px",
+                            }}
+                          >
+                            {item.name}
+                          </Typography>
+                        </Box>
+                        <Typography
+                          sx={{
+                            color: "#616161",
+                            size: "16px",
+                          }}
+                        >
+                          {totalItemCount}
+                        </Typography>
+                      </Box>
                     )
                   );
                 })}
               </List>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleCloseModal}
-              >
-                Close
-              </Button>
             </Box>
           </Modal>
         </Box>
