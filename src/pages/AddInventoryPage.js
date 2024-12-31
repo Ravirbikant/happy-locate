@@ -26,7 +26,6 @@ import {
 } from "../redux/slices/inventorySlice";
 import data from "../data/inventory.json";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import washing from "../data/images/washing-machine.jpg";
 
 const AddInventoryPage = () => {
   const { items } = data;
@@ -116,60 +115,84 @@ const AddInventoryPage = () => {
   });
 
   function ItemCard({ item }) {
+    const [quantity, setQuantity] = useState(0);
+
+    const handleAddClick = () => {
+      setQuantity(1);
+    };
+
+    const handleUpdateInventoryCategory = (value) => {
+      setQuantity(quantity + value);
+    };
+
+    const imageSrc = `/images/${item.image}`;
+
     return (
-      <Box className=" w-1/2 p-2">
+      <Box className="w-1/2 p-2">
         <Box className="h-[147px] rounded-[4px] border border-gray-400 flex flex-col">
-          <Box className="flex-grow">
+          <Box className="h-[110px] overflow-hidden">
             <img
-              src={washing}
+              src={imageSrc}
               alt="item"
-              className="w-full h-full object-cover rounded-tl-[4px] rounded-tr-[4px]"
+              className="w-full h-full object-cover"
             />
           </Box>
           <Box className="flex ml-2 mb-2 h-[30px] items-center justify-between">
-            <Typography
-              style={{
-                fontWeight: 700,
-                fontSize: "12px",
-              }}
-            >
+            <Typography style={{ fontWeight: 700, fontSize: "12px" }}>
               {item.name}
             </Typography>
             <Box className="flex items-center">
-              <IconButton
-                className="bg-gray-100 border rounded-full"
-                onClick={() => handleUpdateInventoryCategory(item.name, -1)}
-              >
-                <Remove
-                  sx={{
+              {quantity === 0 ? (
+                <Typography
+                  onClick={handleAddClick}
+                  style={{
                     color: "#2B80FF",
-                    width: 20,
-                    height: 20,
-                    borderRadius: "50%",
-                    border: "1px solid #2B80FF",
+                    fontSize: "12px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    marginRight: "0.5rem",
                   }}
-                />
-              </IconButton>
-              <Typography
-                className="text-lg font-medium"
-                style={{ color: "#2B80FF" }}
-              >
-                {calculateTotalItemCount(item.name)}
-              </Typography>
-              <IconButton
-                className="bg-gray-100 border rounded-full"
-                onClick={() => handleUpdateInventoryCategory(item.name, 1)}
-              >
-                <Add
-                  sx={{
-                    color: "#2B80FF",
-                    width: 20,
-                    height: 20,
-                    borderRadius: "50%",
-                    border: "1px solid #2B80FF",
-                  }}
-                />
-              </IconButton>
+                >
+                  Add
+                </Typography>
+              ) : (
+                <>
+                  <IconButton
+                    className="bg-gray-100 border rounded-full"
+                    onClick={() => handleUpdateInventoryCategory(-1)}
+                  >
+                    <Remove
+                      sx={{
+                        color: "#2B80FF",
+                        width: 20,
+                        height: 20,
+                        borderRadius: "50%",
+                        border: "1px solid #2B80FF",
+                      }}
+                    />
+                  </IconButton>
+                  <Typography
+                    className="font-medium"
+                    style={{ color: "#2B80FF" }}
+                  >
+                    {quantity}
+                  </Typography>
+                  <IconButton
+                    className="bg-gray-100 border rounded-full"
+                    onClick={() => handleUpdateInventoryCategory(1)}
+                  >
+                    <Add
+                      sx={{
+                        color: "#2B80FF",
+                        width: 20,
+                        height: 20,
+                        borderRadius: "50%",
+                        border: "1px solid #2B80FF",
+                      }}
+                    />
+                  </IconButton>
+                </>
+              )}
             </Box>
           </Box>
         </Box>
